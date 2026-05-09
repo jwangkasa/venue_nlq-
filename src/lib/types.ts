@@ -29,3 +29,22 @@ export interface ParsedQuery {
   params: SearchParams
   raw_input: string
 }
+
+export type MessageRole = 'user' | 'assistant'
+
+export interface UserMessage {
+  id: string
+  role: 'user'
+  query: string
+  timestamp: number
+}
+
+export interface AssistantMessage {
+  id: string
+  role: 'assistant'
+  venues: Venue[]
+  error: string | null
+  timestamp: number
+}
+
+export type ChatMessage = UserMessage | AssistantMessage

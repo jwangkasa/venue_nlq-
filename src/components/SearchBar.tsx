@@ -7,14 +7,12 @@ import { getAutocompleteResults, AutocompleteResult } from '@/lib/autocomplete-s
 interface SearchBarProps {
   onSearch: (query: string) => void
   isLoading?: boolean
-  hasSearched?: boolean
   placeholder?: string
 }
 
 export default function SearchBar({
   onSearch,
   isLoading = false,
-  hasSearched = false,
   placeholder = "Tell me what kind of venue you're looking for..."
 }: SearchBarProps) {
   const [query, setQuery] = useState('')
@@ -59,6 +57,7 @@ export default function SearchBar({
       handleAutocompleteSelect(autocompleteResults[selectedIndex])
     } else if (query.trim()) {
       onSearch(query.trim())
+      setQuery('')
       setShowAutocomplete(false)
     }
   }
@@ -120,35 +119,10 @@ export default function SearchBar({
     }
   }
 
-  const exampleQueries = [
-    "I need a place for 50 people in CBD",
-    "Looking for a rooftop venue with parking",
-    "Budget meeting room for my small team",
-    "Luxury wedding venue for 200 guests",
-    "Conference center with catering in Marina Bay"
-  ]
-
-  const handleExampleClick = (example: string) => {
-    setQuery(example)
-    onSearch(example)
-  }
-
   return (
     <div className="w-full max-w-4xl mx-auto">
-      {/* Header — hidden after first search to save space */}
-      {!hasSearched && (
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-            What do you want to do today?
-          </h2>
-          <p className="text-gray-600">
-            Describe your venue needs in your own words, and I&apos;ll help you find the perfect match.
-          </p>
-        </div>
-      )}
-
-      {/* Search Form - ChatGPT Style with Autocomplete */}
-      <form onSubmit={handleSubmit} className="relative mb-6">
+      {/* Search Form */}
+      <form onSubmit={handleSubmit} className="relative">
         <div className="relative bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 focus-within:shadow-md focus-within:border-gray-300">
           <textarea
             ref={inputRef}
@@ -215,25 +189,6 @@ export default function SearchBar({
           </div>
         )}
       </form>
-
-      {/* Example queries — hidden after first search */}
-      {!hasSearched && (
-        <div className="mb-6">
-          <p className="text-sm text-gray-700 mb-3 font-medium">Try asking me something like:</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            {exampleQueries.map((example, index) => (
-              <button
-                key={index}
-                onClick={() => handleExampleClick(example)}
-                disabled={isLoading}
-                className="text-left text-sm px-4 py-3 bg-gray-50 text-gray-800 rounded-xl hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 border border-gray-200"
-              >
-                &ldquo;{example}&rdquo;
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   )
 }
